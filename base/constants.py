@@ -1,6 +1,6 @@
 # Kích thước cửa sổ (rộng x cao)
-WINDOW_WIDTH = 400
-WINDOW_HEIGHT = 300
+WINDOW_WIDTH = 550
+WINDOW_HEIGHT = 600
 
 # Số lượng cửa sổ cần mở
 TOTAL_WINDOW = 1
@@ -11,6 +11,6 @@ WINDOW_SIZE = "500x500"
 TITLE_WINDOW = "Created and Design by MSH !"
 
 # Action script
-TIME_WAIT_ELEMENT = 5, 
+TIME_WAIT_ELEMENT = 5 
 FB = "fb"
 PATH_FILE_VIA = 'D:\\Study\\Python\\functions\\facebook\\via.txt'
