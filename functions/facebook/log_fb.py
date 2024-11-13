@@ -11,7 +11,10 @@ from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.chrome.service import Service
 from datetime import datetime
+import os
 
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 active_drivers = 0
 active_drivers_lock = threading.Lock()
 
@@ -53,9 +56,11 @@ def process(acc,position):
     options.add_argument("--disable-notifications")
     options.add_argument("--mute-audio")
     options.add_argument("--headless")
+    options.add_argument("--log-level=3")
+    options.add_experimental_option('excludeSwitches', ['enable-logging'])
 
-    service = Service(CHROME_DRIVER)
-    driver = webdriver.Chrome(service=service, options=options)
+    service = Service(log_path=os.devnull)
+    driver = webdriver.Chrome(service=service,options=options)
     try:
         splitAcc = acc.split("|")
         username, password, twoFa, *_ = [item.strip() for item in splitAcc]
@@ -111,12 +116,11 @@ def process(acc,position):
                 print("Cant find form submit")
 
             try:
-                homeIcon = WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH,'//a[@href="/"]')))
+                homeIcon = WebDriverWait(driver,10).until(EC.element_to_be_clickable((By.XPATH,'//a[@href="/"]')))
                 homeIcon.click()
                 driver.get("https://adsmanager.facebook.com/adsmanager/manage")
                 buttonCreateAds = WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH,'//div[@id="pe_toolbar"]//div[@role="toolbar"]/div[1]//span//div[@role="none"][1]/div')))
-                isEnable = buttonCreateAds.get_attribute("disabled") is None or buttonCreateAds.get_attribute("aria-disabled") != "true" or "disabled" not in  buttonCreateAds.get_attribute("class")
-
+                isEnable = buttonCreateAds.get_attribute("aria-disabled") != "true"
                 if isEnable:
                     with open(PATH_FILE_LOG, "a") as file:
                         file.write(f"{username} | {password} | {twoFa} | Live Ads\n")
